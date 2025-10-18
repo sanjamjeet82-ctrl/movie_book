@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Login</title>
+  <style>
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: linear-gradient(to right, #6366f1, #3b82f6);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #1f2937;
+    }
+
+    .login-box {
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 2rem;
+      color: #3b82f6;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-top: 6px;
+      background-color: #f9fafb;
+    }
+
+    .error {
+      color: #ef4444;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(to right, #5ee7df, #b490ca);
+      color: #000;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(180, 144, 202, 0.4);
+    }
+  </style>
+</head>
+<body>
+ <div class="login-box">
+  {% if request.user.is_authenticated %}
+    <h1>Welcome, {{ request.user.username }}</h1>
+    <p style="text-align:center; margin-bottom: 20px;">You're logged in. Ready to explore?</p>
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn-login" style="background: linear-gradient(to right, #f87171, #ef4444); color: white;">
+        🔓 Logout
+      </button>
+    </form>
+  {% else %}
+    <h1>Sign In</h1>
+    {% if form.errors %}
+      <p class="error">Invalid username or password. Please try again.</p>
+    {% endif %}
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      <label>Username:
+        <input type="text" name="username" required>
+      </label>
+      <label>Password:
+        <input type="password" name="password" required>
+      </label>
+      <input type="hidden" name="next" value="{{ next }}">
+      <button type="submit" class="btn-login">
+        🔐 Login
+      </button>
+    </form>
+  {% endif %}
+</div>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ movie.title }}</title>
+  <style>
+    body {
+      font-family: Inter, Arial, sans-serif;
+      padding: 30px;
+      background: #0c151b;
+      color: #ececec;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 20px;
+      border-radius: 12px;
+      background: #FF5349;
+      color: #fff;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 83, 73, 0.4);
+    }
+    .trailer {
+      max-width: 800px;
+      height: 450px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(226, 223, 223, 0.2);
+      margin-bottom: 24px;
+    }
+    .poster {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+    .show-card {
+      padding: 16px;
+      margin: 12px 0;
+      border-radius: 10px;
+      background: #8f2a2a;
+      box-shadow: 0 8px 24px rgba(223, 219, 219, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <a class="btn" href="/">← Back to Movies</a>
+  <h1>{{ movie.title }}</h1>
+
+  <div style="display: flex; gap: 24px;">
+    <div style="flex: 1;">
+      <img class="poster" src="{{ movie.poster_url }}" alt="Movie Poster">
+      <p style="margin-top: 12px;">Duration: {{ movie.duration_minutes }} mins</p>
+      <p>Genres: {% for g in movie.genres.all %}{{ g.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+      <p>Languages: {% for l in movie.languages.all %}{{ l.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    </div>
+
+    <div style="flex: 2;">
+      <h3>Synopsis</h3>
+      <p>{{ movie.description }}</p>
+
+      <h3>Trailer</h3>
+      <div class="trailer">
+        {% if movie.trailer_youtube_id %}
+          <iframe width="100%" height="100%" src="https://www.youtube.com/embed/{{ movie.trailer_youtube_id }}" frameborder="0" allowfullscreen></iframe>
+        {% else %}
+          <p>No trailer available</p>
+        {% endif %}
+      </div>
+
+      <h3>Upcoming Shows</h3>
+      <div>
+        {% for show in shows %}
+          <div class="show-card">
+            <div>
+              <strong>{{ show.theater.name }} - {{ show.theater.city }}</strong><br>
+              <small>{{ show.start_time|date:"D, M j, Y" }} at {{ show.start_time|time:"H:i" }}</small>
+            </div>
+            <div>
+              <a class="btn" href="/shows/{{ show.id }}/seats/">Select Seats & Buy</a>
+            </div>
+          </div>
+        {% empty %}
+          <p>No upcoming shows</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>

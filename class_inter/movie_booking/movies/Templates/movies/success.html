@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Confirmed</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9fafb;
+      padding: 50px;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #10b981;
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+    .details {
+      text-align: left;
+      margin-top: 30px;
+      font-size: 16px;
+      color: #374151;
+    }
+    .details p {
+      margin: 8px 0;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 12px 24px;
+      background-color: #2563eb;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    .btn:hover {
+      background-color: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 Booking Confirmed!</h1>
+    <p>Your booking for <strong>{{ booking.show.movie.title }}</strong> on <strong>{{ booking.show.date }}</strong> at <strong>{{ booking.show.time }}</strong> is confirmed.</p>
+       <p style="color: #4b5563; font-size: 16px;">
+  A confirmation email has been sent to <strong>{{ booking.user.email }}</strong>.
+</p>
+
+
+    <div class="details">
+      <p><strong>Movie:</strong> {{ booking.show.movie.title }}</p>
+      <p><strong>Date:</strong> {{ booking.show.date }}</p>
+      <p><strong>Time:</strong> {{ booking.show.time }}</p>
+      <p><strong>Seats:</strong>
+        {% for seat in booking.seats.all %}
+          {{ seat.row }}{{ seat.number }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      </p>
+      <p><strong>Total Amount:</strong> ${{ booking.total_amount }}</p>
+      <p><strong>Booking ID:</strong> {{ booking.id }}</p>
+    </div>
+
+    <a href="/" class="btn">Back to Home</a>
+  </div>
+</body>
+</html>

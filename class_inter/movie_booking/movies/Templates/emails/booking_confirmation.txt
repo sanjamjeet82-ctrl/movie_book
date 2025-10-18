@@ -1,0 +1,7 @@
+Hi {{ booking.user.username }},
+
+Your booking for {{ movie }} on {{ date }} at {{ time }} is confirmed.
+
+Seats: {% for seat in seats %}{{ seat.row }}{{ seat.number }} {% endfor %}
+
+Thank you!

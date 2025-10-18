@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Checkout</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: #f5f7fb;
+      padding: 40px;
+      margin: 0;
+      color: #1f2937;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      color: #3b82f6;
+      margin-bottom: 30px;
+    }
+
+    .checkout-box {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .checkout-box p {
+      font-size: 1.1rem;
+      margin: 12px 0;
+      line-height: 1.6;
+    }
+
+    .btn-pay {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      margin-top: 30px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(to right, #5ee7df, #b490ca);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(180, 144, 202, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-pay:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(180, 144, 202, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <h1>Checkout</h1>
+
+  <div class="checkout-box">
+    <p><strong>Movie:</strong> {{ booking.show.movie.title }}</p>
+    <p><strong>Show Time:</strong> {{ booking.show.start_time|date:"D, M j, Y" }} at {{ booking.show.start_time|time:"H:i" }}</p>
+    <p><strong>Seats:</strong> {% for s in booking.seats.all %}{{ s.row }}{{ s.number }} {% endfor %}</p>
+    <p><strong>Total Amount:</strong> ₹{{ booking.total_amount }}</p>
+
+    <button id="stripe-pay" class="btn-pay">💳 Pay with Card</button>
+  </div>
+
+  <script>
+    const stripe = Stripe("{{ stripe_pub }}");
+    document.getElementById("stripe-pay").addEventListener("click", function(){
+      fetch(window.location.pathname, {method:"GET"}).then(r=>r.text()).then(()=>{
+        stripe.redirectToCheckout({sessionId: "{{ session_id }}"});
+      });
+    });
+  </script>
+</body>
+</html>
+
